@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ckarsent <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ckarsent <ckarsent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 23:55:07 by ckarsent          #+#    #+#             */
-/*   Updated: 2025/02/24 23:55:09 by ckarsent         ###   ########.fr       */
+/*   Updated: 2025/03/10 16:19:48 by ckarsent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,13 @@ char	*get_cmd(char *cmd, char **envp)
 		return (NULL);
 	if (access(cmd, F_OK | X_OK) == 0)
 		return (cmd);
+	if (!ft_env(envp))
+		return (NULL);
 	path = ft_split(ft_env(envp), ':');
 	if (!path)
 		return (NULL);
-	i = 0;
-	while (path[i])
+	i = -1;
+	while (path[++i])
 	{
 		tmp = ft_strjoin(path[i], "/");
 		full_cmd = ft_strjoin(tmp, cmd);
@@ -63,7 +65,6 @@ char	*get_cmd(char *cmd, char **envp)
 		if (access(full_cmd, F_OK | X_OK) == 0)
 			return (free_split(path), full_cmd);
 		free(full_cmd);
-		i++;
 	}
 	return (free_split(path));
 }
